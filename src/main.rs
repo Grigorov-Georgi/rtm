@@ -1,6 +1,6 @@
+use std::env;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Seek, SeekFrom, Write};
-use std::env;
 
 fn main() {
     let file_path = "time.txt";
@@ -31,7 +31,7 @@ fn main() {
             Ok(num) => {
                 contents_parsed = contents_parsed + num;
                 write_to_file(contents_parsed, &mut file);
-                println!("Added {} minutes. Total {}", num, contents_parsed)
+                println!("Added {} minutes. {}", num, get_total(contents_parsed))
             }
             Err(_) => println!("Invalid number format after 'a' command"),
         }
@@ -40,17 +40,29 @@ fn main() {
             Ok(num) => {
                 contents_parsed = contents_parsed - num;
                 write_to_file(contents_parsed, &mut file);
-                println!("Removed {} minutes. Total {}", num, 1)
+                println!("Removed {} minutes. {}", num, get_total(contents_parsed))
             }
             Err(_) => println!("Invalid number format after 's' command"),
         }
     } else if command == "h" {
-        let hours = contents_parsed / 60;
-        let min = contents_parsed % 60;
-        println!("Total: {}h {}m", hours, min);
+        println!("{}", get_total(contents_parsed));
     } else {
         println!("Invalid input!");
     }
+}
+
+fn get_total(minutes: i32) -> String {
+    let hours = get_hours(minutes);
+    let min = get_minutes(minutes);
+    format!("Total {}h {}m", hours, min)
+}
+
+fn get_hours(minutes: i32) -> i32 {
+    minutes / 60
+}
+
+fn get_minutes(minutes: i32) -> i32 {
+    minutes % 60
 }
 
 fn write_to_file(contents: i32, file: &mut File) {

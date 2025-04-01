@@ -27,7 +27,17 @@ fn main() {
         std::process::exit(1);
     });
 
-    if let Some(minutes_str) = command.strip_prefix("a") {
+    if let Some(hours_str) = command.strip_prefix("ah") {
+        match hours_str.parse::<i32>() {
+            Ok(hours) => {
+                let total_minutes = hours * 60;
+                contents_parsed = contents_parsed + total_minutes;
+                write_to_file(contents_parsed, &mut file);
+                println!("Added {} minutes. {}", total_minutes, get_total(contents_parsed))
+            }
+            Err(_) => println!("Invalid number format after 'a' command"),
+        }
+    } else if let Some(minutes_str) = command.strip_prefix("a") {
         match minutes_str.parse::<i32>() {
             Ok(num) => {
                 contents_parsed = contents_parsed + num;

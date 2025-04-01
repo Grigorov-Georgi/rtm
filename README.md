@@ -6,7 +6,8 @@ A hidden folder named ```.rtm``` is created in your home directory to store the 
 ```cargo install --path```
 
 ## Usage
-- Add time: ```rtm a60```
+- Add 1 hour: ```rtm ah1```
+- Add 60 minutes: ```rtm a60```
 - Remove time: ```rtm s60```
 - Get time: ```rtm h```
 

@@ -1,9 +1,10 @@
 use std::env;
-use std::fs::{File, OpenOptions};
+use std::fs::{create_dir_all, File, OpenOptions};
 use std::io::{Read, Seek, SeekFrom, Write};
+use std::path::PathBuf;
 
 fn main() {
-    let file_path = "time.txt";
+    let file_path = get_file_path();
 
     let mut file = OpenOptions::new()
         .read(true)
@@ -15,8 +16,8 @@ fn main() {
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
 
-    if contents.is_empty() {
-        write_to_file(0, &mut file);
+    if contents.trim().is_empty() {
+        contents = "0".to_string();
     }
 
     let mut contents_parsed: i32 = contents.parse().unwrap();
@@ -63,6 +64,17 @@ fn get_hours(minutes: i32) -> i32 {
 
 fn get_minutes(minutes: i32) -> i32 {
     minutes % 60
+}
+
+fn get_file_path() -> PathBuf {
+    let mut path = env::var("HOME")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| PathBuf::from("."));
+
+    path.push(".rtm");
+    create_dir_all(&path).expect("Failed to create .rtm dir");
+    path.push("time.txt");
+    path
 }
 
 fn write_to_file(contents: i32, file: &mut File) {
